@@ -1,0 +1,216 @@
+swagger: '2.0'
+
+info:
+  description: Задача для Alfa Battle от X5 Retail Group
+  version: 1.0.0
+  title: На промоигле
+  contact:
+    name: X5 Retail Group
+    url: 'https://x5.ru/'
+
+host: localhost
+basePath: /
+
+tags:
+  - name: Конфигурация промо-механик
+    description: Promo Controller
+  - name: Расчет чека
+    description: Receipt Controller
+
+paths:
+  /promo:
+    post:
+      tags:
+        - Конфигурация промо-механик
+      summary: Загрузка новой матрицы промо-механик
+      operationId: setMatrix
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Матрица промо-механик
+          required: true
+          schema:
+            $ref: '#/definitions/PromoMatrix'
+      responses:
+        '200':
+          description: Правила успешно загружены
+        '400':
+          description: Некорректный запрос
+      deprecated: false
+
+  /receipt:
+    post:
+      tags:
+        - Расчет чека
+      summary: Расчитать стоимость позиций в чеке для указанной корзины
+      operationId: calculate
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: cart
+          description: Данное о магазине и товарах в корзине
+          required: true
+          schema:
+            $ref: '#/definitions/ShoppingCart'
+      responses:
+        '200':
+          description: Стоимость успешно расчитана
+          schema:
+            $ref: '#/definitions/FinalPriceReceipt'
+        '400':
+          description: Некорректный запрос
+      deprecated: false
+
+
+definitions:
+  FinalPricePosition:
+    type: object
+    properties:
+      id:
+        type: string
+        description: ID товара
+      name:
+        type: string
+        description: Наименование товара
+      price:
+        type: number
+        description: Цена после применения скидки
+      regularPrice:
+        type: number
+        description: Цена до применения скидки
+    title: FinalPricePosition
+    description: Результат расчета цены для одной позиции
+
+  FinalPriceReceipt:
+    type: object
+    properties:
+      discount:
+        type: number
+        description: Полная сумма скидки
+      positions:
+        type: array
+        description: Результат расчета цен по позициям
+        items:
+          $ref: '#/definitions/FinalPricePosition'
+      total:
+        type: number
+        description: Полная сумма чека с применением скидок
+    title: FinalPriceReceipt
+    description: Результат расчета корзины
+
+  ItemCountRule:
+    type: object
+    properties:
+      bonusQuantity:
+        type: integer
+        format: int32
+        description: Количество единиц товара в подарок
+      itemId:
+        type: string
+        description: ID товара
+      shopId:
+        type: integer
+        format: int32
+        description: 'Номер магазина, -1 для акции сети'
+      triggerQuantity:
+        type: integer
+        format: int32
+        description: Количество единиц для применения скидки
+    title: ItemCountRule
+    description: Параметры скидки формата "N+k" (N+k единиц товара по цене N единиц)
+
+  ItemGroupRule:
+    type: object
+    properties:
+      discount:
+        type: number
+        format: double
+        description: Коэффициент скидки (сидка = цена * discount)
+      groupId:
+        type: string
+        description: ID группы связанных товаров
+      shopId:
+        type: integer
+        format: int32
+        description: 'Номер магазина, -1 для акции сети'
+    title: ItemGroupRule
+    description: Параметры скидки при покупке связанных товаров
+
+  ItemPosition:
+    type: object
+    properties:
+      itemId:
+        type: string
+        description: ID товара
+      quantity:
+        type: integer
+        format: int32
+        description: Количество товара в позиции
+    title: ItemPosition
+    description: Позиция товара в корзине
+
+  LoyaltyCardRule:
+    type: object
+    properties:
+      discount:
+        type: number
+        format: double
+        description: Коэффициент скидки (сидка = цена * discount)
+      shopId:
+        type: integer
+        format: int32
+        description: 'Номер магазина, -1 для акции сети'
+    title: LoyaltyCardRule
+    description: >-
+      Параметры скидки при предъявлении пенсионного удостоверения или социальной
+      карты
+
+  PromoMatrix:
+    type: object
+    properties:
+      itemCountRules:
+        type: array
+        description: >-
+          Список правил при покупке определенного количества единиц конкретного
+          товара
+        items:
+          $ref: '#/definitions/ItemCountRule'
+      itemGroupRules:
+        type: array
+        description: Список правил при покупке связанных товаров
+        items:
+          $ref: '#/definitions/ItemGroupRule'
+      loyaltyCardRules:
+        type: array
+        description: >-
+          Список правил скидки при предъявлении пенсионного удостоверения или
+          социальной карты
+        items:
+          $ref: '#/definitions/LoyaltyCardRule'
+    title: PromoMatrix
+    description: Матрица промо-механик
+
+  ShoppingCart:
+    type: object
+    properties:
+      loyaltyCard:
+        type: boolean
+        description: Признак предоставленния карты лояльности
+      positions:
+        type: array
+        description: Позиции с товарами в корзине
+        items:
+          $ref: '#/definitions/ItemPosition'
+      shopId:
+        type: integer
+        format: int32
+        description: Номер магазина
+    title: ShoppingCart
+    description: Данные о магазине и товарах в корзине
