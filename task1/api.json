@@ -1,0 +1,178 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Api Documentation",
+    "version": "1.0",
+    "title": "Api Documentation",
+    "termsOfService": "urn:tos",
+    "contact": {},
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    }
+  },
+  "host": "127.0.0.1:8080",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "atm-controller",
+      "description": "Atm Controller"
+    }
+  ],
+  "paths": {
+    "/atms/nearest": {
+      "get": {
+        "tags": [
+          "atm-controller"
+        ],
+        "summary": "getNearestAtm",
+        "operationId": "getNearestAtmUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "latitude",
+            "in": "query",
+            "description": "latitude",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "description": "longitude",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "payments",
+            "in": "query",
+            "description": "payments",
+            "required": false,
+            "type": "boolean",
+            "default": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/AtmResponse"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/atms/nearest-with-alfik": {
+      "get": {
+        "tags": [
+          "atm-controller"
+        ],
+        "summary": "getNearestAtmsWithMoney",
+        "operationId": "getNearestAtmsWithMoneyUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "alfik",
+            "in": "query",
+            "description": "alfik",
+            "required": false,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "latitude",
+            "in": "query",
+            "description": "latitude",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "name": "longitude",
+            "in": "query",
+            "description": "longitude",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/AtmResponse"
+              }
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/atms/{id}": {
+      "get": {
+        "tags": [
+          "atm-controller"
+        ],
+        "summary": "getById",
+        "operationId": "getByIdUsingGET",
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "type": "object"
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        },
+        "deprecated": false
+      }
+    }
+  },
+  "definitions": {
+    "AtmResponse": {
+      "type": "object",
+      "properties": {
+        "city": {
+          "type": "string"
+        },
+        "deviceId": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "latitude": {
+          "type": "string"
+        },
+        "location": {
+          "type": "string"
+        },
+        "longitude": {
+          "type": "string"
+        },
+        "payments": {
+          "type": "boolean"
+        }
+      },
+      "title": "AtmResponse"
+    }
+  }
+}
