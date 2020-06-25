@@ -137,11 +137,14 @@
           "200": {
             "description": "OK",
             "schema": {
-              "type": "object"
+              "$ref": "#/definitions/AtmResponse"
             }
           },
           "404": {
-            "description": "Not Found"
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
           }
         },
         "deprecated": false
@@ -173,6 +176,15 @@
         }
       },
       "title": "AtmResponse"
+    },
+    "ErrorResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        }
+      },
+      "title": "ErrorResponse"
     }
   }
 }
