@@ -1,0 +1,228 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Api Documentation",
+    "version": "1.0",
+    "title": "Api Documentation",
+    "termsOfService": "urn:tos",
+    "contact": {},
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    }
+  },
+  "host": "127.0.0.1:8082",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "branches-controller",
+      "description": "Branches Controller"
+    },
+    {
+      "name": "predict-controller",
+      "description": "Predict Controller"
+    }
+  ],
+  "paths": {
+    "/branches": {
+      "get": {
+        "tags": [
+          "branches-controller"
+        ],
+        "summary": "getNearBranch",
+        "operationId": "getNearBranchUsingGET",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "lat",
+            "in": "query",
+            "description": "lat",
+            "required": true,
+            "type": "number",
+            "format": "double"
+          },
+          {
+            "name": "lon",
+            "in": "query",
+            "description": "lon",
+            "required": true,
+            "type": "number",
+            "format": "double"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Branches"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/branches/{id}": {
+      "get": {
+        "tags": [
+          "branches-controller"
+        ],
+        "summary": "getBranch",
+        "operationId": "getBranchUsingGET",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Branches"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    },
+    "/branches/{id}/predict": {
+      "get": {
+        "tags": [
+          "predict-controller"
+        ],
+        "summary": "getBranchesWithPredicting",
+        "operationId": "getBranchesWithPredictingUsingGET",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "dayOgWeek",
+            "in": "query",
+            "description": "dayOgWeek",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "hourOfDay",
+            "in": "query",
+            "description": "hourOfDay",
+            "required": true,
+            "type": "integer",
+            "format": "int32"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "description": "id",
+            "required": true,
+            "type": "integer",
+            "format": "int64"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/BranchesWithPredicting"
+            }
+          },
+          "404": {
+            "description": "NOT FOUND",
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            }
+          }
+        },
+        "deprecated": false
+      }
+    }
+  },
+  "definitions": {
+    "Branches": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "lat": {
+          "type": "number",
+          "format": "double"
+        },
+        "lon": {
+          "type": "number",
+          "format": "double"
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "title": "Branches"
+    },
+    "BranchesWithPredicting": {
+      "type": "object",
+      "properties": {
+        "address": {
+          "type": "string"
+        },
+        "dayOfWeek": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "hourOfDay": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "id": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "lat": {
+          "type": "number",
+          "format": "double"
+        },
+        "lon": {
+          "type": "number",
+          "format": "double"
+        },
+        "predicting": {
+          "type": "integer",
+          "format": "int64"
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "title": "BranchesWithPredicting"
+    },
+    "ErrorResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string"
+        }
+      },
+      "title": "ErrorResponse"
+    }
+  }
+}
